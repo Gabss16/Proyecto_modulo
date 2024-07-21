@@ -1,7 +1,9 @@
 Create table enfermera(
 idEnfermara PRIMARY KEY,
 nombreEnfermera varchar2(50) NOT NULL,
-contrasena varchar2(250) NOT NULL
+correoEnfermera varchar2(50)NOT NULL,
+contrasena varchar2(250) NOT NULL,
+telefonoEnfermera varchar2(50)NOT NULL
 );
 
 Create table paciente(
