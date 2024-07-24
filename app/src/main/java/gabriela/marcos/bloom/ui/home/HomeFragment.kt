@@ -1,5 +1,6 @@
 package gabriela.marcos.bloom.ui.home
 
+import RecicleViewHelpers.Adaptador
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import gabriela.marcos.bloom.R
 import gabriela.marcos.bloom.databinding.FragmentHomeBinding
@@ -20,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import modelo.Paciente
 import modelo.claseConexion
 import java.util.UUID
 
@@ -47,6 +51,67 @@ class HomeFragment : Fragment() {
         //codigo
         // initializing our variable for button with its id.
         val btnShowBottomSheet = root.findViewById<ImageButton>(R.id.idBtnShowBottomSheet);
+        val rcvPacientes = root.findViewById<RecyclerView>(R.id.rcvPacientes)
+
+        rcvPacientes.layoutManager = LinearLayoutManager(requireContext())
+
+        fun obtenerDatosPacientes(): List<Paciente> {
+            //1- Creo un objeto de la clase conexión
+            val objConexion = claseConexion().cadenaConexion()
+
+            //2 - Obtengo el ID de la enfermera que inició sesión
+            fun obtenerIdEnfermera(): String {
+                return login.variablesGlobalesRecuperacionDeContrasena.IdEnfermera
+            }
+            val idEnfermera = obtenerIdEnfermera()
+
+            // El símbolo de pregunta es porque los datos pueden ser nulos
+            val statement = objConexion?.prepareStatement("SELECT * FROM paciente WHERE idEnfermera = ?")
+            statement?.setString(1, idEnfermera)
+            val resultSet = statement?.executeQuery()!!
+
+            // En esta variable se añaden TODOS los valores de pacientes
+            val listaPacientes = mutableListOf<Paciente>()
+
+            // Recorro todos los registros de la base de datos
+            // .next() significa que mientras haya un valor después de ese se va a repetir el proceso
+            while (resultSet.next()) {
+                val idPaciente = resultSet.getString("idPaciente")
+                val nombresPaciente = resultSet.getString("nombresPaciente")
+                val apellidosPaciente = resultSet.getString("apellidosPaciente")
+                val edad = resultSet.getInt("edad")
+                val enfermedad = resultSet.getString("enfermedad")
+                val numeroHabitacion = resultSet.getInt("numeroHabitacion")
+                val numeroCama = resultSet.getInt("numeroCama")
+                val medicamentosAsignados = resultSet.getString("medicamentosAsignados")
+                val fechaIngreso = resultSet.getString("fechaIngreso")
+                val horaDeAplicacionDeMedicamentos = resultSet.getString("horaDeAplicacionDeMedicamentos")
+
+                val paciente = Paciente(
+                    idPaciente,
+                    idEnfermera,
+                    nombresPaciente,
+                    apellidosPaciente,
+                    edad,
+                    enfermedad,
+                    numeroHabitacion,
+                    numeroCama,
+                    medicamentosAsignados,
+                    fechaIngreso,
+                    horaDeAplicacionDeMedicamentos
+                )
+                listaPacientes.add(paciente)
+            }
+            return listaPacientes
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val pacienteDB = obtenerDatosPacientes()
+            withContext(Dispatchers.Main) {
+                val adapter = Adaptador(pacienteDB)
+                rcvPacientes.adapter = adapter
+            }
+        }
 
         // adding on click listener for our button.
         btnShowBottomSheet.setOnClickListener {
@@ -106,8 +171,10 @@ class HomeFragment : Fragment() {
                         )
 
                         addPaciente.executeUpdate()
+                        val pacienteDB = obtenerDatosPacientes()
 
                         withContext(Dispatchers.Main) {
+                            (rcvPacientes.adapter as? Adaptador)?.actualizarDatos(pacienteDB)
                             Toast.makeText(requireContext(), "Paciente Ingresado", Toast.LENGTH_LONG).show()
                             dialog.dismiss()
                         }
