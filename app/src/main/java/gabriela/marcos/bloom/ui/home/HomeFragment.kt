@@ -56,25 +56,16 @@ class HomeFragment : Fragment() {
         rcvPacientes.layoutManager = LinearLayoutManager(requireContext())
 
         fun obtenerDatosPacientes(): List<Paciente> {
-            //1- Creo un objeto de la clase conexión
             val objConexion = claseConexion().cadenaConexion()
+            val idEnfermera = login.variablesGlobalesRecuperacionDeContrasena.IdEnfermera
 
-            //2 - Obtengo el ID de la enfermera que inició sesión
-            fun obtenerIdEnfermera(): String {
-                return login.variablesGlobalesRecuperacionDeContrasena.IdEnfermera
-            }
-            val idEnfermera = obtenerIdEnfermera()
-
-            // El símbolo de pregunta es porque los datos pueden ser nulos
+            // Verifica el nombre de la columna
             val statement = objConexion?.prepareStatement("SELECT * FROM paciente WHERE idEnfermera = ?")
             statement?.setString(1, idEnfermera)
             val resultSet = statement?.executeQuery()!!
 
-            // En esta variable se añaden TODOS los valores de pacientes
             val listaPacientes = mutableListOf<Paciente>()
 
-            // Recorro todos los registros de la base de datos
-            // .next() significa que mientras haya un valor después de ese se va a repetir el proceso
             while (resultSet.next()) {
                 val idPaciente = resultSet.getString("idPaciente")
                 val nombresPaciente = resultSet.getString("nombresPaciente")

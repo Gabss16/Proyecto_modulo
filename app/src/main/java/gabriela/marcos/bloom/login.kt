@@ -55,7 +55,7 @@ class login : AppCompatActivity() {
 
                     // Verificar si se encontró un resultado
                     if (resultado?.next() == true) {
-                        IdEnfermera = resultado.getString("IdEmpleador")
+                        IdEnfermera = resultado.getString("IdEnfermera")
                         // Ahora Id tiene el valor obtenido de la base de datos
                     } else {
                         // Manejar caso donde no se encontró Id (correo no existe)
