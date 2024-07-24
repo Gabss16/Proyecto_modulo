@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,9 +12,14 @@ import androidx.core.view.WindowInsetsCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import modelo.claseConexion
 
 class login : AppCompatActivity() {
+    companion object variablesGlobalesRecuperacionDeContrasena {
+        lateinit var correoLogin: String
+        lateinit var IdEnfermera: String
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -33,6 +39,43 @@ class login : AppCompatActivity() {
 
         //Creo la funcion para registrarse
         btnLogin.setOnClickListener {
+            correoLogin = txtCorreoLogin.text.toString()
+            //obtener id enfermera
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val objConexion = claseConexion().cadenaConexion()
+
+                    // Preparar la consulta para obtener Id
+                    val resultSet =
+                        objConexion?.prepareStatement("SELECT idEnfermera FROM enfermera WHERE correoEnfermera = ?")
+                    resultSet?.setString(1, correoLogin)
+
+                    // Ejecutar la consulta y obtener el resultado
+                    val resultado = resultSet?.executeQuery()
+
+                    // Verificar si se encontró un resultado
+                    if (resultado?.next() == true) {
+                        IdEnfermera = resultado.getString("IdEmpleador")
+                        // Ahora Id tiene el valor obtenido de la base de datos
+                    } else {
+                        // Manejar caso donde no se encontró Id (correo no existe)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@login, "Correo no encontrado", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        return@launch  // Salir del bloque de código si no se encontró el correo
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@login,
+                            "Error al consultar la base de datos",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
             val Enfermeras = Intent(this, Enfermeras::class.java )
             GlobalScope.launch(Dispatchers.IO){
                 val objConexion = claseConexion().cadenaConexion()
