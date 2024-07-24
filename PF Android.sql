@@ -7,39 +7,15 @@ telefonoEnfermera varchar2(50)NOT NULL
 );
 
 
-CREATE TABLE paciente (
-    idPaciente VARCHAR2(50) PRIMARY KEY,
-    nombresPaciente VARCHAR2(25) NOT NULL,
-    apellidosPaciente VARCHAR2(25) NOT NULL,
-    edad INT NOT NULL,
-    fechaIngreso VARCHAR2(20) NOT NULL,
-    idHabitacion VARCHAR2(50),
-    idEnfermedad VARCHAR2(50),
-    FOREIGN KEY (idHabitacion) REFERENCES habitacion(idHabitacion),
-    FOREIGN KEY (idEnfermedad) REFERENCES enfermedad(idEnfermedad)
-);
-
-CREATE TABLE habitacion (
-    idHabitacion VARCHAR2(50) PRIMARY KEY,
-    numeroHabitacion INT NOT NULL,
-    numeroCama INT NOT NULL
-);
-
-CREATE TABLE enfermedad (
-    idEnfermedad VARCHAR2(50) PRIMARY KEY,
-    nombreEnfermedad VARCHAR2(50) NOT NULL
-);
-
-CREATE TABLE medicamento (
-    idMedicamento VARCHAR2(50) PRIMARY KEY,
-    nombreMedicamento VARCHAR2(50) NOT NULL
-);
-
-CREATE TABLE paciente_medicamento (
-    idPaciente VARCHAR2(50),
-    idMedicamento VARCHAR2(50),
-    horaDeAplicacionDeMedicamentos VARCHAR2(50) NOT NULL,
-    PRIMARY KEY (idPaciente, idMedicamento),
-    FOREIGN KEY (idPaciente) REFERENCES paciente(idPaciente),
-    FOREIGN KEY (idMedicamento) REFERENCES medicamento(idMedicamento)
+Create table paciente(
+idPaciente Varchar2(50) PRIMARY KEY,
+nombresPaciente varchar2(25) NOT NULL,
+apellidosPaciente varchar2(25) NOT NULL,
+edad INT NOT NULL,
+enfermedad varchar2 (50) NOT NULL,
+numeroHabitacion INT NOT  NULL,
+numeroCama INT NOT NULL,
+medicamentosAsignados varchar2(200) NOT NULL,
+fechaIngreso varchar2(20) NOT NULL,
+horaDeAplicacionDeMedicamentos varchar2(50) NOT NULL
 );
