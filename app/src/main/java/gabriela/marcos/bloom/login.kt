@@ -19,6 +19,8 @@ class login : AppCompatActivity() {
     companion object variablesGlobalesRecuperacionDeContrasena {
         lateinit var correoLogin: String
         lateinit var IdEnfermera: String
+        lateinit var nombreEnfermera: String
+        lateinit var numeroEnfermera: String
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +49,7 @@ class login : AppCompatActivity() {
 
                     // Preparar la consulta para obtener Id
                     val resultSet =
-                        objConexion?.prepareStatement("SELECT idEnfermera FROM enfermera WHERE correoEnfermera = ?")
+                        objConexion?.prepareStatement("SELECT * FROM enfermera WHERE correoEnfermera = ?")
                     resultSet?.setString(1, correoLogin)
 
                     // Ejecutar la consulta y obtener el resultado
@@ -55,8 +57,13 @@ class login : AppCompatActivity() {
 
                     // Verificar si se encontró un resultado
                     if (resultado?.next() == true) {
+                        withContext(Dispatchers.Main){
                         IdEnfermera = resultado.getString("IdEnfermera")
+                        nombreEnfermera = resultado.getString("nombreEnfermera")
+                        numeroEnfermera = resultado.getString("telefonoEnfermera")
+                        correoLogin = resultado.getString("correoEnfermera")
                         // Ahora Id tiene el valor obtenido de la base de datos
+                        }
                     } else {
                         // Manejar caso donde no se encontró Id (correo no existe)
                         withContext(Dispatchers.Main) {
