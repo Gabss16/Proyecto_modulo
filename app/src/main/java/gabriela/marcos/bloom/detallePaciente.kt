@@ -1,5 +1,6 @@
 package gabriela.marcos.bloom
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
@@ -64,7 +65,14 @@ class detallePaciente : AppCompatActivity() {
         btnEliminarPaciente.setOnClickListener {
             eliminarPaciente(idPaciente)
         }
+        val btnEditarPaciente = findViewById<ImageButton>(R.id.editarPaciente)
+        btnEditarPaciente.setOnClickListener {
+        val intent = Intent(this, Editarpaciente::class.java)
+            startActivity(intent)
+        }
     }
+
+
 
     private fun eliminarPaciente(idPaciente: String) {
         GlobalScope.launch(Dispatchers.IO) {

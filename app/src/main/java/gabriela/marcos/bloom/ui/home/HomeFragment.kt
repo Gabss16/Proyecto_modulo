@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import gabriela.marcos.bloom.R
 import gabriela.marcos.bloom.databinding.FragmentHomeBinding
+import gabriela.marcos.bloom.detallePaciente
 import gabriela.marcos.bloom.login
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,8 +32,11 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    companion object {
+        lateinit var idPaciente: String
+    }
+
+
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -67,7 +71,7 @@ class HomeFragment : Fragment() {
             val listaPacientes = mutableListOf<Paciente>()
 
             while (resultSet.next()) {
-                val idPaciente = resultSet.getString("idPaciente")
+                idPaciente = resultSet.getString("idPaciente")
                 val nombresPaciente = resultSet.getString("nombresPaciente")
                 val apellidosPaciente = resultSet.getString("apellidosPaciente")
                 val edad = resultSet.getInt("edad")
@@ -143,6 +147,8 @@ class HomeFragment : Fragment() {
                         val addPaciente = objConexion?.prepareStatement(
                             "INSERT INTO PACIENTE (idPaciente, idEnfermera, nombresPaciente, apellidosPaciente, edad, enfermedad, numeroHabitacion, numeroCama, medicamentosAsignados, fechaIngreso, horaDeAplicacionDeMedicamentos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                         )!!
+
+
 
                         addPaciente.setString(1, UUID.randomUUID().toString())
                         addPaciente.setString(2, idEnfermera)

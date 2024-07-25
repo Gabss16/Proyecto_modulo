@@ -9,29 +9,21 @@
 
     <ImageButton
         android:id="@+id/idBtnShowBottomSheet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="326dp"
-        android:layout_marginTop="178dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="601dp"
+        android:layout_width="53dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="24dp"
         android:backgroundTint="#00FFFFFF"
         android:src="@drawable/add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/rcvPacientes"
+        app:layout_constraintEnd_toEndOf="@+id/rcvPacientes"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.836" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvPacientes"
-        android:layout_width="409dp"
-        android:layout_height="599dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
+        android:layout_width="424dp"
+        android:layout_height="464dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        tools:layout_editor_absoluteX="-5dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
