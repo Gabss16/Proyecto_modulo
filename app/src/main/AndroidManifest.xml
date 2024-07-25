@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Bloom"
         tools:targetApi="31">
         <activity
+            android:name=".detallePaciente"
+            android:exported="false" />
+        <activity
             android:name=".card"
             android:exported="false" />
         <activity
